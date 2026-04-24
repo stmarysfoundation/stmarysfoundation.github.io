@@ -1,4 +1,174 @@
-HTML
+HTMLimport { useEffect, useState } from "react"; import { Button } from "@/components/ui/button"; import { Card, CardContent } from "@/components/ui/card";
+
+export default function StMarysFoundationSite() { const [form, setForm] = useState({ name: "", email: "", message: "" }); const [donation, setDonation] = useState({ name: "", email: "", amount: "" }); const [status, setStatus] = useState(""); const [donations, setDonations] = useState([]);
+
+const CONTACT_PHONE = "+233553932570"; const CONTACT_EMAIL = "stmarysfoundation965@gmail.com";
+
+useEffect(() => { const script = document.createElement("script"); script.src = "https://js.paystack.co/v1/inline.js"; script.async = true; document.body.appendChild(script); }, []);
+
+useEffect(() => { const saved = localStorage.getItem("donations"); if (saved) setDonations(JSON.parse(saved)); }, []);
+
+const saveDonation = (newDonation) => { const updated = [newDonation, ...donations]; setDonations(updated); localStorage.setItem("donations", JSON.stringify(updated)); };
+
+const handleChange = (e) => { setForm({ ...form, [e.target.name]: e.target.value }); };
+
+const handleDonationChange = (e) => { setDonation({ ...donation, [e.target.name]: e.target.value }); };
+
+const handleSubmit = async (e) => { e.preventDefault(); setStatus("Sending...");
+
+try {
+  const payload = {
+    service_id: "YOUR_SERVICE_ID",
+    template_id: "YOUR_TEMPLATE_ID",
+    user_id: "YOUR_PUBLIC_KEY",
+    template_params: {
+      ...form,
+      phone: CONTACT_PHONE,
+      recipient_email: CONTACT_EMAIL,
+    },
+  };
+
+  await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  setStatus("Message sent successfully!");
+  setForm({ name: "", email: "", message: "" });
+} catch {
+  setStatus("Failed to send message.");
+}
+
+};
+
+const payWithPaystack = () => { if (!window.PaystackPop) { alert("Payment system not loaded."); return; }
+
+const amount = parseFloat(donation.amount || "0");
+
+const handler = window.PaystackPop.setup({
+  key: "YOUR_PAYSTACK_PUBLIC_KEY",
+  email: donation.email,
+  amount: amount * 100,
+  currency: "GHS",
+  ref: "SMF" + Date.now(),
+  callback: function (response) {
+    const record = {
+      name: donation.name,
+      email: donation.email,
+      amount,
+      phone: CONTACT_PHONE,
+      reference: response.reference,
+      date: new Date().toLocaleString(),
+    };
+
+    saveDonation(record);
+    alert("Donation successful! Receipt generated.");
+    setDonation({ name: "", email: "", amount: "" });
+  },
+  onClose: function () {
+    alert("Payment cancelled.");
+  },
+});
+
+handler.openIframe();
+
+};
+
+return ( <div className="min-h-screen bg-gray-50 text-gray-800">
+
+{/* HERO */}
+  <section className="text-center py-16 bg-blue-700 text-white">
+    <h1 className="text-4xl font-bold">St Mary’s Foundation</h1>
+    <p className="mt-2">UNICEF-style donation & impact platform</p>
+
+    <div className="mt-4 text-sm">
+      <p>📞 {CONTACT_PHONE}</p>
+      <p>✉️ {CONTACT_EMAIL}</p>
+    </div>
+
+    <div className="mt-6 flex justify-center gap-4">
+      <div className="bg-white text-black p-4 rounded-xl">
+        💰 Total Donations: GHS {donations.reduce((a, b) => a + b.amount, 0)}
+      </div>
+      <div className="bg-white text-black p-4 rounded-xl">
+        🎁 Total Donors: {donations.length}
+      </div>
+    </div>
+  </section>
+
+  {/* DONATION */}
+  <section className="py-10 px-6 max-w-3xl mx-auto">
+    <h2 className="text-2xl font-bold mb-4">Make a Donation</h2>
+
+    <Card>
+      <CardContent className="space-y-3 p-6">
+        <input name="name" placeholder="Full Name" value={donation.name} onChange={handleDonationChange} className="w-full p-2 border rounded" />
+        <input name="email" placeholder="Email" value={donation.email} onChange={handleDonationChange} className="w-full p-2 border rounded" />
+        <input name="amount" type="number" placeholder="Amount (GHS)" value={donation.amount} onChange={handleDonationChange} className="w-full p-2 border rounded" />
+
+        <Button onClick={payWithPaystack} className="w-full bg-green-600">
+          Donate Securely
+        </Button>
+      </CardContent>
+    </Card>
+  </section>
+
+  {/* IMPACT */}
+  <section className="py-10 px-6">
+    <h2 className="text-xl font-bold text-center mb-6">Our Impact</h2>
+    <div className="grid md:grid-cols-3 gap-4">
+      <img className="rounded-xl" src="https://source.unsplash.com/600x400/?charity" />
+      <img className="rounded-xl" src="https://source.unsplash.com/600x400/?volunteers" />
+      <img className="rounded-xl" src="https://source.unsplash.com/600x400/?education" />
+    </div>
+  </section>
+
+  {/* DONATIONS LIST */}
+  <section className="py-10 px-6 max-w-4xl mx-auto">
+    <h2 className="text-xl font-bold mb-4">Recent Donations</h2>
+
+    {donations.length === 0 ? (
+      <p>No donations yet.</p>
+    ) : (
+      donations.map((d, i) => (
+        <Card key={i} className="mb-3">
+          <CardContent className="p-4">
+            <p><b>Name:</b> {d.name}</p>
+            <p><b>Email:</b> {d.email}</p>
+            <p><b>Amount:</b> GHS {d.amount}</p>
+            <p><b>Reference:</b> {d.reference}</p>
+            <p><b>Date:</b> {d.date}</p>
+          </CardContent>
+        </Card>
+      ))
+    )}
+  </section>
+
+  {/* CONTACT */}
+  <section className="py-10 px-6 bg-white">
+    <h2 className="text-xl font-bold text-center mb-2">Contact Us</h2>
+
+    <p className="text-center text-sm mb-4">
+      📞 {CONTACT_PHONE} | ✉️ {CONTACT_EMAIL}
+    </p>
+
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-3">
+      <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="w-full p-2 border" />
+      <input name="email" placeholder="Email" value={form.email} onChange={handleChange} className="w-full p-2 border" />
+      <textarea name="message" placeholder="Message" value={form.message} onChange={handleChange} className="w-full p-2 border" />
+
+      <Button type="submit" className="w-full">Send Message</Button>
+      <p className="text-center">{status}</p>
+    </form>
+  </section>
+
+  <footer className="text-center py-6 text-sm text-gray-500">
+    © {new Date().getFullYear()} St Mary’s Foundation
+  </footer>
+</div>
+
+); }
 <!DOCTYPE html>
 <html lang="en">
 <head>
