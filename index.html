@@ -1,0 +1,163 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St Mary’s Foundation</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f9f8;
+}
+
+header {
+    background: #0b3d91;
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header img {
+    height: 60px;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hero {
+    background: linear-gradient(to right, #0b3d91, #2e8b57);
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 40px;
+}
+
+.hero p {
+    font-size: 18px;
+}
+
+.btn {
+    background: white;
+    color: #0b3d91;
+    padding: 12px 25px;
+    margin-top: 20px;
+    display: inline-block;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.section {
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.section h2 {
+    color: #0b3d91;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    background: white;
+    margin: 15px;
+    padding: 20px;
+    width: 280px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+footer {
+    background: #0b3d91;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.contact input, .contact textarea {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <img src="logo.png" alt="Logo">
+    <nav>
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>St Mary’s Foundation</h1>
+    <p>Empowering Girls • Promoting Hygiene • Building a Better Future</p>
+    <a href="#contact" class="btn">Support Us</a>
+</section>
+
+<section class="section" id="about">
+    <h2>About Us</h2>
+    <p>
+        St Mary’s Foundation is dedicated to improving the lives of adolescent girls
+        through education, sanitary hygiene support, and community empowerment programs.
+    </p>
+</section>
+
+<section class="section" id="projects">
+    <h2>Our Projects</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Sanitary Pad Support</h3>
+            <p>Providing free sanitary pads to girls in schools across Ghana.</p>
+        </div>
+        <div class="card">
+            <h3>Health Education</h3>
+            <p>Teaching menstrual hygiene and reproductive health awareness.</p>
+        </div>
+        <div class="card">
+            <h3>Community Outreach</h3>
+            <p>Supporting underserved communities with essential resources.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section contact" id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: info@stmarysfoundation.org</p>
+    <p>Phone: +233 XXX XXX XXX</p>
+
+    <form>
+        <input type="text" placeholder="Your Name"><br>
+        <input type="email" placeholder="Your Email"><br>
+        <textarea rows="5" placeholder="Your Message"></textarea><br>
+        <button class="btn">Send Message</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 St Mary’s Foundation | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
